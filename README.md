@@ -153,7 +153,7 @@ sequenceDiagram
 
 ## Capturas del Motor Gráfico (`@napi-rs/canvas`)
 
-Las siguientes imágenes fueron renderizadas directamente con los generadores reales de `CriZpy-Bot` (`canvasWelcomeCard.js`, `canvasFarewellCard.js` y `canvasVoteCrate.js`):
+Las siguientes imágenes fueron renderizadas con los generadores reales de `CriZpy-Bot` (`canvasWelcomeCard.js`, `canvasFarewellCard.js` y `canvasVoteCrate.js`), usando la **configuración por defecto** del bot y un avatar de muestra (en producción se usa el avatar real del usuario):
 
 | Tarjeta de Bienvenida (`/bienvenida canvas`) | Tarjeta de Despedida (`/despedida canvas`) |
 | :---: | :---: |
