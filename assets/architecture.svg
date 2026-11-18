@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-label="CriZpy-Bot Architecture Diagram">
+  <defs>
+    <linearGradient id="archBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#141b24"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#58A6FF"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#3FB950"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="640" rx="16" fill="url(#archBg)"/>
+
+  <!-- Header -->
+  <text x="44" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="800" fill="#F0F6FC">Arquitectura del Sistema — CriZpy-Bot</text>
+  <text x="44" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#8B949E">Diseño modular orientado a eventos, cachés TTL en RAM y operaciones atómicas en MongoDB</text>
+
+  <!-- Layer 1: External / Ingestion -->
+  <rect x="44" y="96" width="1112" height="106" rx="12" fill="#161B22" stroke="#30363D" stroke-width="1.5"/>
+  <text x="64" y="120" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#79C0FF" letter-spacing="0.8">CAPA 1 · INGESTIÓN Y EVENTOS EXTERNOS</text>
+
+  <rect x="64" y="134" width="320" height="54" rx="8" fill="#1F2937" stroke="#5865F2" stroke-width="1.5"/>
+  <text x="224" y="157" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Discord Gateway API (v14)</text>
+  <text x="224" y="177" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#9CA3AF">Slash Commands · Botones · Modales · Voz</text>
+
+  <rect x="412" y="134" width="350" height="54" rx="8" fill="#1F2937" stroke="#F78166" stroke-width="1.5"/>
+  <text x="587" y="157" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Express HTTP + Top.gg Webhook</text>
+  <text x="587" y="177" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#9CA3AF">Votos en tiempo real · AutoPoster · Healthcheck</text>
+
+  <rect x="790" y="134" width="346" height="54" rx="8" fill="#1F2937" stroke="#D2A8FF" stroke-width="1.5"/>
+  <text x="963" y="157" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Cron Jobs (node-cron)</text>
+  <text x="963" y="177" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#9CA3AF">TempBans · Recordatorios · Cumpleaños · Sweeps</text>
+
+  <!-- Arrows Layer 1 -> Layer 2 -->
+  <line x1="224" y1="202" x2="224" y2="232" stroke="#58A6FF" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="587" y1="202" x2="587" y2="232" stroke="#58A6FF" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="963" y1="202" x2="963" y2="232" stroke="#58A6FF" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Layer 2: Core Router + Caches -->
+  <rect x="44" y="236" width="1112" height="114" rx="12" fill="#161B22" stroke="#30363D" stroke-width="1.5"/>
+  <text x="64" y="260" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#D2A8FF" letter-spacing="0.8">CAPA 2 · ENRUTAMIENTO, SEGURIDAD Y CACHÉS EN RAM</text>
+
+  <rect x="64" y="274" width="335" height="62" rx="8" fill="#1C2128" stroke="#8957E5" stroke-width="1.5"/>
+  <text x="231" y="298" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Router &amp; Guardias Globales</text>
+  <text x="231" y="317" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#9CA3AF">interactionMap · Bloqueo DM · Candados Set()</text>
+  <text x="231" y="331" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#8B949E">ReDoS protection · Global Error Channel Logger</text>
+
+  <rect x="418" y="274" width="350" height="62" rx="8" fill="#1C2128" stroke="#388BFD" stroke-width="1.5"/>
+  <text x="593" y="298" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Cachés TTL + Batching</text>
+  <text x="593" y="317" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#9CA3AF">premiumCache · configCache · avatarCache (5m)</text>
+  <text x="593" y="331" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#8B949E">progressCache + voiceTracker (flush bulkWrite)</text>
+
+  <rect x="786" y="274" width="350" height="62" rx="8" fill="#1C2128" stroke="#3FB950" stroke-width="1.5"/>
+  <text x="961" y="298" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Memory Sweepers</text>
+  <text x="961" y="317" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#9CA3AF">Purgado Discord.js cada 1h (mensajes &gt;30m)</text>
+  <text x="961" y="331" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#8B949E">Limpieza de TTL maps cada 5m (Anti-OOM)</text>
+
+  <!-- Arrows Layer 2 -> Layer 3 -->
+  <line x1="231" y1="350" x2="231" y2="380" stroke="#58A6FF" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="593" y1="350" x2="593" y2="380" stroke="#58A6FF" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="961" y1="350" x2="961" y2="380" stroke="#58A6FF" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Layer 3: Domain Modules -->
+  <rect x="44" y="384" width="1112" height="114" rx="12" fill="#161B22" stroke="#30363D" stroke-width="1.5"/>
+  <text x="64" y="408" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFA657" letter-spacing="0.8">CAPA 3 · DOMINIOS FUNCIONALES (86 COMANDOS / 27 EVENTOS / 8 INTERACCIONES)</text>
+
+  <rect x="64" y="422" width="206" height="62" rx="8" fill="#1F242D" stroke="#F85149" stroke-width="1.2"/>
+  <text x="167" y="446" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Moderación &amp; AutoMod</text>
+  <text x="167" y="465" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">Anti-Crosspost · RaidMode</text>
+  <text x="167" y="479" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">/diagnostico · Logs</text>
+
+  <rect x="282" y="422" width="206" height="62" rx="8" fill="#1F242D" stroke="#A371F7" stroke-width="1.2"/>
+  <text x="385" y="446" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Tickets &amp; Soporte</text>
+  <text x="385" y="465" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">Private Threads · Claim</text>
+  <text x="385" y="479" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">HTML Transcripts · DM</text>
+
+  <rect x="500" y="422" width="206" height="62" rx="8" fill="#1F242D" stroke="#FEE75C" stroke-width="1.2"/>
+  <text x="603" y="446" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Economía &amp; Duelos</text>
+  <text x="603" y="465" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">$inc Atómico · Racha 48h</text>
+  <text x="603" y="479" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">PvP Duelos · Casino · Tienda</text>
+
+  <rect x="718" y="422" width="206" height="62" rx="8" fill="#1F242D" stroke="#3FB950" stroke-width="1.2"/>
+  <text x="821" y="446" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Niveles, Voz &amp; Social</text>
+  <text x="821" y="465" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">XP Chat/Voz · TempVoice</text>
+  <text x="821" y="479" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">Starboard · Highlights</text>
+
+  <rect x="936" y="422" width="200" height="62" rx="8" fill="#1F242D" stroke="#00D4FF" stroke-width="1.2"/>
+  <text x="1036" y="446" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Motor Canvas 2D</text>
+  <text x="1036" y="465" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">@napi-rs/canvas · Timeout 4s</text>
+  <text x="1036" y="479" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">Cards · Casino · Cheques</text>
+
+  <!-- Arrows Layer 3 -> Layer 4 -->
+  <line x1="385" y1="498" x2="385" y2="528" stroke="#3FB950" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <line x1="821" y1="498" x2="821" y2="528" stroke="#3FB950" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <!-- Layer 4: Persistence & Hosting -->
+  <rect x="44" y="532" width="544" height="82" rx="12" fill="#132219" stroke="#2EA043" stroke-width="1.5"/>
+  <text x="316" y="560" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="800" fill="#7EE787">MongoDB Atlas (Mongoose v9)</text>
+  <text x="316" y="582" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#A5D6A7">39 Modelos · Índices compuestos · maxPoolSize: 50 · IPv4 forzado</text>
+  <text x="316" y="600" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#7EE787">Operaciones atómicas ($inc / $set / $push / bulkWrite)</text>
+
+  <rect x="612" y="532" width="544" height="82" rx="12" fill="#161B22" stroke="#58A6FF" stroke-width="1.5"/>
+  <text x="884" y="560" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="800" fill="#79C0FF">Oracle Cloud Ubuntu VPS (24/7)</text>
+  <text x="884" y="582" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#B3D4FF">PM2 + systemd auto-start · Swap 1 GB · Reinicio diario 04:00</text>
+  <text x="884" y="600" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#79C0FF">Graceful Shutdown (SIGINT/SIGTERM) con flush de voz y caché</text>
+</svg>

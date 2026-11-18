@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360" role="img" aria-label="CriZpy-Bot Atomic Concurrency and Voice Batching Flow">
+  <defs>
+    <linearGradient id="flowBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#151c26"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#79C0FF"/>
+    </marker>
+    <marker id="arrY" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#FEE75C"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="360" rx="16" fill="url(#flowBg)"/>
+  <text x="40" y="42" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="800" fill="#F0F6FC">Flujos Críticos de Consistencia y Rendimiento</text>
+
+  <!-- Row 1: Atomic Economy -->
+  <rect x="40" y="64" width="1120" height="128" rx="12" fill="#161B22" stroke="#30363D" stroke-width="1.5"/>
+  <text x="60" y="88" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#FEE75C">1. ECONOMÍA Y DUELOS ATÓMICOS (ANTI DOUBLE-SPEND Y RACE CONDITIONS)</text>
+
+  <rect x="60" y="104" width="215" height="68" rx="8" fill="#1F242D" stroke="#5865F2" stroke-width="1.5"/>
+  <text x="167" y="131" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Interacción Usuario</text>
+  <text x="167" y="152" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">/duelo · /casino · /pagar</text>
+
+  <line x1="275" y1="138" x2="313" y2="138" stroke="#FEE75C" stroke-width="2" marker-end="url(#arrY)"/>
+
+  <rect x="317" y="104" width="245" height="68" rx="8" fill="#1F242D" stroke="#FEE75C" stroke-width="1.5"/>
+  <text x="439" y="131" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Candado en Memoria Set()</text>
+  <text x="439" y="152" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">Bloquea doble-click simultáneo</text>
+
+  <line x1="562" y1="138" x2="600" y2="138" stroke="#FEE75C" stroke-width="2" marker-end="url(#arrY)"/>
+
+  <rect x="604" y="104" width="265" height="68" rx="8" fill="#132219" stroke="#3FB950" stroke-width="1.5"/>
+  <text x="736" y="131" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#7EE787">MongoDB Atómico ($inc)</text>
+  <text x="736" y="152" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#A5D6A7">findOneAndUpdate balance &gt;= apuesta</text>
+
+  <line x1="869" y1="138" x2="907" y2="138" stroke="#FEE75C" stroke-width="2" marker-end="url(#arrY)"/>
+
+  <rect x="911" y="104" width="229" height="68" rx="8" fill="#1F242D" stroke="#00D4FF" stroke-width="1.5"/>
+  <text x="1025" y="131" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Canvas + Respuesta</text>
+  <text x="1025" y="152" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">Recibo/Resultado PNG + unlock</text>
+
+  <!-- Row 2: Voice & Mission Batching -->
+  <rect x="40" y="210" width="1120" height="128" rx="12" fill="#161B22" stroke="#30363D" stroke-width="1.5"/>
+  <text x="60" y="234" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#79C0FF">2. TRACKING DE VOZ Y MISIONES POR LOTES (CERO SATURACIÓN A MONGODB)</text>
+
+  <rect x="60" y="250" width="215" height="68" rx="8" fill="#1F242D" stroke="#388BFD" stroke-width="1.5"/>
+  <text x="167" y="277" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Eventos Frecuentes</text>
+  <text x="167" y="298" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">Chat XP · Voz (sin AFK/bots)</text>
+
+  <line x1="275" y1="284" x2="313" y2="284" stroke="#79C0FF" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="317" y="250" width="245" height="68" rx="8" fill="#1F242D" stroke="#D2A8FF" stroke-width="1.5"/>
+  <text x="439" y="277" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Acumulador en RAM (Map)</text>
+  <text x="439" y="298" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">progressCache · voiceSessions</text>
+
+  <line x1="562" y1="284" x2="600" y2="284" stroke="#79C0FF" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="604" y="250" width="265" height="68" rx="8" fill="#132219" stroke="#3FB950" stroke-width="1.5"/>
+  <text x="736" y="277" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#7EE787">Flush Periódico bulkWrite</text>
+  <text x="736" y="298" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#A5D6A7">1 escritura agrupada cada ciclo</text>
+
+  <line x1="869" y1="284" x2="907" y2="284" stroke="#79C0FF" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="911" y="250" width="229" height="68" rx="8" fill="#1F242D" stroke="#F78166" stroke-width="1.5"/>
+  <text x="1025" y="277" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Graceful Shutdown</text>
+  <text x="1025" y="298" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#9CA3AF">SIGINT/SIGTERM guarda todo</text>
+</svg>
