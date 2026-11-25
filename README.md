@@ -38,12 +38,12 @@
 
 | Métrica del Proyecto | Alcance |
 | --- | --- |
-| **Comandos Slash** | **86** archivos de comando (`85+` comandos por dominio) |
+| **Comandos Slash & Context** | **86** Slash Commands + **4** Context Menus (**90** comandos globales registrados) |
 | **Eventos de Discord** | **27** listeners reactivos (`messageCreate`, `voiceStateUpdate`, `guildMemberAdd`, etc.) |
-| **Interacciones Globales** | **8** manejadores persistentes (botones, select menus, modales, tickets DM) |
-| **Modelos de Datos** | **39** esquemas Mongoose con índices compuestos |
-| **Utilidades Core** | **25** módulos especializados (Canvas, caché TTL, voz, AutoMod, permisos) |
-| **Suite de Tests** | Pruebas unitarias nativas con `node:test` |
+| **Interacciones Globales** | **11** manejadores persistentes (botones, select menus, modales, tickets DM) |
+| **Modelos de Datos** | **39** esquemas Mongoose con índices compuestos y colecciones TTL |
+| **Utilidades Core** | **32** módulos especializados (Canvas 2.0, `runtimeCache`, caché LRU de imágenes, voz, AutoMod, permisos) |
+| **Suite de Tests** | **51** pruebas unitarias nativas con `node:test` (11 suites) |
 
 ---
 
@@ -73,8 +73,8 @@ flowchart TB
     subgraph CORE["2. Enrutamiento, Guardias y Cachés en RAM"]
         RTR["interactionCreate + interactionMap"]
         GUARD["Bloqueo DM + Candados Set() + safe-regex"]
-        CACHE["Cachés TTL (premiumCache, configCache, avatarCache)"]
-        BATCH["Acumuladores (progressCache, voiceTracker)"]
+        CACHE["runtimeCache + premiumCache + avatar/bgCache LRU"]
+        BATCH["Fast-path Misiones + voiceTracker"]
         SWEEP["Memory Sweepers (1h Discord.js + 5m TTL)"]
     end
 
@@ -83,11 +83,11 @@ flowchart TB
         TKT["Tickets (Private Threads + HTML)"]
         ECO["Economía, Duelos PvP & Casino"]
         LVL["Niveles, Voz, TempVoice & Social"]
-        CNV["Motor Canvas 2D (@napi-rs/canvas)"]
+        CNV["Motor Canvas 2.0 (@napi-rs/canvas)"]
     end
 
     subgraph INFRA["4. Persistencia y Producción"]
-        MDB[("MongoDB Atlas\nmaxPoolSize: 50 + Índices")]
+        MDB[("MongoDB Atlas\nmaxPoolSize: 20 + Índices")]
         VPS["Oracle Cloud Ubuntu VPS\nPM2 + systemd + 1 GB Swap"]
     end
 
@@ -106,16 +106,17 @@ flowchart TB
 ```text
 crizpy-bot/
 ├── index.js                 # Arranque, Express/Top.gg, Mongoose, Sweepers y graceful shutdown
-├── deploy-commands.js       # Registro global de Slash Commands
+├── deploy-commands.js       # Registro global de Slash Commands y Context Menus
 ├── deploy-guild.js          # Registro rápido en servidor de pruebas
 ├── scripts/                 # Healthcheck y respaldo automatizado de MongoDB
 ├── src/
 │   ├── commands/            # 86 Slash Commands organizados por dominio
+│   ├── contextMenus/        # 4 Context Menus nativos de Discord
 │   ├── events/              # 27 listeners del Gateway de Discord
-│   ├── interactions/        # 8 manejadores globales (tickets, ayuda, tienda, embeds, roles)
+│   ├── interactions/        # 11 manejadores globales (tickets, ayuda, tienda, embeds, roles, DM)
 │   ├── models/              # 39 esquemas e índices compuestos en Mongoose
-│   └── utils/               # 25 utilidades (Canvas, caché TTL, voz, AutoMod, permisos)
-└── test/                    # Pruebas unitarias con node:test
+│   └── utils/               # 32 utilidades (Canvas 2.0, runtimeCache, LRU, voz, AutoMod, permisos)
+└── test/                    # 51 pruebas unitarias (11 suites) con node:test
 ```
 
 ---
@@ -153,23 +154,19 @@ sequenceDiagram
 
 ## Capturas del Motor Gráfico (`@napi-rs/canvas`)
 
-Las siguientes imágenes fueron renderizadas con los generadores reales de `CriZpy-Bot` (`canvasWelcomeCard.js`, `canvasFarewellCard.js` y `canvasVoteCrate.js`), usando la **configuración por defecto** del bot y un avatar de muestra (en producción se usa el avatar real del usuario):
+Las siguientes imágenes fueron renderizadas con los generadores reales de `CriZpy-Bot` (`canvasWelcomeCard.js`, `canvasFarewellCard.js`, `canvasVoteCrate.js` y `canvasCardsExtra.js`), usando la **configuración por defecto** del bot y un avatar de muestra (en producción se usa el avatar real del usuario):
 
 | Tarjeta de Bienvenida (`/bienvenida canvas`) | Tarjeta de Despedida (`/despedida canvas`) |
 | :---: | :---: |
 | ![Preview Bienvenida Canvas](./assets/preview-welcome.png) | ![Preview Despedida Canvas](./assets/preview-farewell.png) |
 | **Avatar circular, textos y aro configurables** | **Fondo degradado, avatar en escala de grises y glow** |
 
-<div align="center">
+| Recompensa por Voto (`/votar` + `/caja abrir`) | Bola 8 Mística (`/bola8`) |
+| :---: | :---: |
+| ![Preview Caja Legendaria Canvas](./assets/preview-crate.png) | ![Preview Bola 8 Canvas](./assets/preview-8ball.png) |
+| **Gradiente radial, rareza dinámica y auto-escalado tipográfico** | **Esfera 3D, ventana neón y respuesta con wrapping automático** |
 
-| Recompensa por Voto (`/votar` + `/caja abrir`) |
-| :---: |
-| ![Preview Caja Legendaria Canvas](./assets/preview-crate.png) |
-| **Gradiente radial, rareza dinámica y auto-escalado tipográfico** |
-
-</div>
-
-Además de estos generadores, el bot produce en vivo tarjetas Canvas para `/info` (3 pestañas interactivas), `/perfil`, `/rank`, `/economia balance`, `/economia trabajar`, `/economia pagar`, `/crimen`, `/robar`, `/duelo`, `/casarse`, `/ship`, `/bola8`, `/sorteo`, `/cumpleaños`, `/top` y `/casino` (Blackjack, Ruleta, Moneda).
+Además de estos generadores, el bot produce en vivo tarjetas Canvas 2.0 para `/info` (3 pestañas interactivas), `/perfil`, `/rank`, `/economia` (`balance`, `trabajar`, `pagar`, `tienda`), `/crimen`, `/robar`, `/duelo`, `/casarse`, `/matrimonio`, `/ship`, `/confesar`, `/recordatorio`, `/misiones`, `/reputacion`, `/sorteo` (ganador VIP), `/cumpleaños`, `/top` y `/casino` (Blackjack, Ruleta, Tragamonedas, Moneda).
 
 ---
 
@@ -181,7 +178,7 @@ Además de estos generadores, el bot produce en vivo tarjetas Canvas para `/info
 | **Tickets en Hilos Privados** | Paneles configurables (`/ticket panel`) que abren **Private Threads** en el canal, soporte por **DM directo** al bot (`Ticket-MD`), sistema de reclamo (`claim`) y exportación automática de transcripciones HTML (`discord-html-transcripts`). |
 | **Economía, Casino & Duelos** | Cartera, racha diaria con ventana de `48h` y Cajas Sorpresa cada 7 días, tienda con roles, `/duelo` PvP 1v1 por turnos con botones, misiones diarias RPG y `/casino` (Blackjack, Ruleta, Tragamonedas, Moneda). |
 | **Niveles, Voz & TempVoice** | XP por chat con alertas configurables, roles automáticos por nivel (modos `stack` y `replace`), tracking de horas en voz excluyendo AFK/deaf/bots (`/top voz`), canales de voz temporales privados (`/tempvoice`) y `/voicerole`. |
-| **Comunidad & Utilidad** | `/starboard` con caché anti-duplicados, `/highlight` por DM, canales solo-multimedia (`/multimedia`), `/recordatorio` con botón de listo y auto-snooze, `/sorteo`, `/cumpleaños`, `/casarse`, `/encuesta`, `/formulario` y constructor visual de embeds. |
+| **Comunidad & Utilidad** | `/starboard` con caché anti-duplicados, `/highlight` por DM, canales solo-multimedia (`/multimedia`), `/recordatorio` con botón de listo y auto-snooze, `/sorteo`, `/confesar`, `/cumpleaños`, `/casarse`, `/encuesta`, `/formulario` y constructor visual de embeds. |
 | **Modelo Freemium** | Control centralizado (`requirePremium` con caché de 5 min) y cuotas diarias (`DailyUsage`), desbloqueando límites expandidos (Top 100, 15 roles de nivel, apuestas sin tope, Canvas personalizados) y recompensas de **Premium-Lite** al votar en Top.gg. |
 
 ---
@@ -189,7 +186,8 @@ Además de estos generadores, el bot produce en vivo tarjetas Canvas para `/info
 ## Decisiones de Ingeniería y Resiliencia
 
 - **Atomicidad en MongoDB:** Todas las mutaciones de saldo, XP, tickets y TempVoice usan operadores atómicos (`$inc`, `$set`, `$push`, `$pull`, `findOneAndUpdate`) y candados en memoria (`Set`) para erradicar *double-spending* y *VersionError*.
-- **Protección contra cuelgues de CDN:** `canvasHelper.js` precarga una imagen fallback en RAM al iniciar, cachea avatares por 5 minutos y aplica `AbortController` con timeout de `4s` para evitar que una imagen lenta congele las interacciones.
+- **Motor Canvas Resiliente y Asíncrono:** `canvasHelper.js` precarga un fallback vectorial `256x256` en RAM al iniciar, mantiene caché LRU de instancias `Image` ya decodificadas (`10m` para avatares, `30m` para fondos personalizados con retención `stale-on-error` de `6h`), deduplica peticiones *in-flight*, aplica recorte `object-fit: cover` sin deformar proporciones y ejecuta `canvas.encode('png')` de forma asíncrona para no bloquear el event loop.
+- **Caché Unificada en RAM (`runtimeCache.js` + Fast-Path de Misiones):** Cachea en memoria (incluyendo resultados vacíos `null`) las consultas frecuentes de `StickyMessage`, `ReactionRole`, `TempVoice`, `VoiceRole`, `ServerLog` y `Guild` con invalidación inmediata al modificar ajustes desde comandos, reduciendo drásticamente las lecturas a MongoDB Atlas en eventos de chat, voz y reacciones.
 - **Control estricto de memoria (VPS 1 GB RAM):** Sweepers de Discord.js cada 1 hora, limpieza de cachés TTL cada 5 minutos, remoción del intent innecesario `GuildPresences`, Swap de `1 GB` y reinicio programado con `pm2`.
 - **Temporizadores sin overflow:** Migración de `setTimeout` largos (vulnerables al límite de 32 bits / >24 días) a `node-cron` persistente en MongoDB para `TempBan` y recordatorios.
 - **Observabilidad:** Captura global de `unhandledRejection` / `uncaughtException` con reporte directo al canal de error-logs, además de métricas de rendimiento en vivo (`!rendimiento`).
